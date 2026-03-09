@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROMEO LIVE TV</title>
+
+<!-- Font Awesome للأيقونات -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<style>
+  /* ----------- Global ----------- */
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:'Segoe UI', Tahoma, sans-serif; background:#121212; color:#fff; overflow-x:hidden;}
+  a{color:#FFD700; text-decoration:none;}
+  button{cursor:pointer; font-weight:bold;}
+
+  /* ----------- الترحيب ----------- */
+  .welcome-container{
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    height:100vh; text-align:center;
+    background: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+  }
+  .site-title{
+    font-size:4rem; margin-bottom:40px; font-weight:bold; text-shadow:2px 2px 10px #000;
+  }
+  .enter-btn{
+    padding:20px 60px; font-size:1.7rem;
+    background-color:#FFD700; color:#121212; border:none; border-radius:12px;
+    transition:.3s;
+  }
+  .enter-btn:hover{background-color:#FFC200;}
+
+  /* ----------- الصفحة الرئيسية ----------- */
+  .main-page{
+    display:none; min-height:100vh;
+    animation: bgMove 20s linear infinite;
+    background: linear-gradient(270deg, #1f1f1f, #121212, #2a2a2a);
+    background-size: 600% 600%;
+    padding-bottom:50px;
+  }
+  @keyframes bgMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+
+  /* ----------- شريط التنقل ----------- */
+  nav.main-nav{
+    background:#1f1f1f; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
+  }
+  nav.main-nav ul{list-style:none; display:flex; gap:20px; padding:0; margin:0;}
+  nav.main-nav li{display:flex; align-items:center; gap:5px; font-size:1.1rem;}
+  nav.main-nav input.search-bar{padding:5px 10px; border-radius:5px; border:none; width:200px;}
+
+  /* ----------- الكروت ----------- */
+  .cards-container{
+    display:flex; flex-wrap:wrap; gap:20px; justify-content:center; padding:30px 20px;
+  }
+  .card{
+    background:#222; padding:15px; border-radius:15px;
+    width:170px; text-align:center; transition: transform .3s, box-shadow .3s;
+  }
+  .card:hover{
+    transform: translateY(-7px); 
+    box-shadow: 0 10px 25px rgba(255,215,0,0.6);
+  }
+  .card img{width:100px; height:60px; object-fit:cover; margin-bottom:10px; border-radius:6px;}
+  .card button{
+    padding:6px 15px; background:#FFD700; border:none; border-radius:6px; margin-top:7px; transition:.3s;
+  }
+  .card button:hover{background:#FFC200;}
+  .card i{font-size:1.5rem; margin-bottom:5px;}
+
+  /* ----------- الزر الذهبي واتساب ----------- */
+  .whatsapp-btn{
+    position:fixed; bottom:20px; right:20px;
+    background:linear-gradient(45deg,#FFD700,#FFC200);
+    color:#121212; padding:15px 20px; border-radius:50px;
+    font-weight:bold; font-size:1.1rem; text-decoration:none;
+    box-shadow: 0 4px 15px rgba(255,215,0,0.5); transition:.3s;
+  }
+  .whatsapp-btn:hover{transform: scale(1.1);}
+
+  /* ----------- الفوتر ----------- */
+  footer{text-align:center; padding:15px; background:#1f1f1f; font-size:0.9rem; margin-top:20px;}
+</style>
+</head>
+<body>
+
+<!-- ---------- الترحيب ---------- -->
+<div id="welcome-page" class="welcome-container">
+  <h1 class="site-title">ROMEO LIVE TV</h1>
+  <button class="enter-btn" onclick="showMain()">دخول الموقع</button>
+</div>
+
+<!-- ---------- الصفحة الرئيسية ---------- -->
+<div id="main-page" class="main-page">
+  <nav class="main-nav">
+    <ul>
+      <li><i class="fas fa-tv"></i><a href="#" onclick="showSection('live')">البث المباشر</a></li>
+      <li><i class="fas fa-futbol"></i><a href="#" onclick="showSection('matches')">مباريات اليوم</a></li>
+      <li><i class="fas fa-video"></i><a href="#" onclick="showSection('summary')">ملخصات المباريات</a></li>
+      <li><i class="fas fa-film"></i><a href="#" onclick="showSection('series')">المسلسلات</a></li>
+      <li><i class="fas fa-clapperboard"></i><a href="#" onclick="showSection('movies')">الأفلام</a></li>
+    </ul>
+    <input type="text" placeholder="ابحث..." class="search-bar" onkeyup="searchCards(this.value)">
+  </nav>
+
+  <div id="sections">
+    <div id="live" class="cards-container" style="display:none;"></div>
+    <div id="matches" class="cards-container" style="display:none;"></div>
+    <div id="summary" class="cards-container" style="display:none;"></div>
+    <div id="series" class="cards-container" style="display:none;"></div>
+    <div id="movies" class="cards-container" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ---------- زر واتساب ---------- -->
+<a href="https://wa.me/201286716976" target="_blank" class="whatsapp-btn">
+  <i class="fab fa-whatsapp"></i> الدعم
+</a>
+
+<!-- ---------- الفوتر ---------- -->
+<footer>
+  روماني جرجس ¶ كيرلس عياد
+</footer>
+
+<script>
+  // ---------- عرض الصفحة الرئيسية ----------
+  function showMain(){
+    document.getElementById('welcome-page').style.display='none';
+    document.getElementById('main-page').style.display='block';
+    renderAll();
+  }
+
+  function showSection(id){
+    ['live','matches','summary','series','movies'].forEach(s=>{
+      document.getElementById(s).style.display = (s===id)? 'flex':'none';
+    });
+  }
+
+  // ---------- بيانات تجريبية ----------
+  const channels=[
+    {name:'beIN SPORTS', logo:'https://via.placeholder.com/100x60?text=beIN', link:'https://www.youtube.com/live/bein'},
+    {name:'MBC', logo:'https://via.placeholder.com/100x60?text=MBC', link:'https://www.youtube.com/live/mbc'}
+  ];
+  const matches=[
+    {title:'الأهلي × الزمالك', logo1:'https://via.placeholder.com/50?text=A', logo2:'https://via.placeholder.com/50?text=B', link:'https://www.youtube.com/live/match1'}
+  ];
+  const summaries=[
+    {title:'الأهلي × الزمالك 2-1', link:'https://www.youtube.com/live/summary1'}
+  ];
+  const series=[
+    {name:'مسلسل رمضان 2026', img:'https://via.placeholder.com/100x150?text=مسلسل', link:'https://www.youtube.com/live/series1'}
+  ];
+  const movies=[
+    {name:'فيلم جديد', img:'https://via.placeholder.com/100x150?text=فيلم', link:'https://www.youtube.com/live/movie1'}
+  ];
+
+  // ---------- عرض الكروت ----------
+  function renderCards(containerId, items, type){
+    const container=document.getElementById(containerId);
+    container.innerHTML='';
+    items.forEach(i=>{
+      const div=document.createElement('div'); div.className='card';
+      if(type==='channel') div.innerHTML=`<img src="${i.logo}" alt="${i.name}"><h3>${i.name}</h3><button onclick="window.open('${i.link}','_blank')">مشاهدة</button>`;
+      else if(type==='match') div.innerHTML=`<img src="${i.logo1}" alt=""><span>${i.title}</span><img src="${i.logo2}" alt=""><button onclick="window.open('${i.link}','_blank')">مشاهدة</button>`;
+      else if(type==='summary') div.innerHTML=`<span>${i.title}</span><button onclick="window.open('${i.link}','_blank')">مشاهدة الملخص</button>`;
+      else if(type==='series') div.innerHTML=`<img src="${i.img}" alt="${i.name}"><h3>${i.name}</h3><button onclick="window.open('${i.link}','_blank')">مشاهدة</button>`;
+      else if(type==='movie') div.innerHTML=`<img src="${i.img}" alt="${i.name}"><h3>${i.name}</h3><button onclick="window.open('${i.link}','_blank')">مشاهدة</button>`;
+      container.appendChild(div);
+    });
+  }
+
+  function renderAll(){
+    renderCards('live', channels, 'channel');
+    renderCards('matches', matches, 'match');
+    renderCards('summary', summaries, 'summary');
+    renderCards('series', series, 'series');
+    renderCards('movies', movies, 'movie');
+  }
+
+  // ---------- شريط البحث ----------
+  function searchCards(query){
+    query=query.toLowerCase();
+    ['live','matches','summary','series','movies'].forEach(section=>{
+      const container=document.getElementById(section);
+      Array.from(container.children).forEach(card=>{
+        const text=card.innerText.toLowerCase();
+        card.style.display = text.includes(query)? 'block':'none';
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
