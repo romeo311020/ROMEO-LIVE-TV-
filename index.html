@@ -341,5 +341,72 @@
     injectPremiumBeinServers();
 </script>
 
+<!-- ========================================================= -->
+<!-- 🆕 الإضافة الجديدة: دعم JSON + دعم روابط Embed (Add Only) -->
+<!-- ========================================================= -->
+
+<style id="embedSupportCSS">
+    #embedContainer { display: none; width: 100%; height: 100%; border: none; }
+</style>
+
+<script id="embedAndJsonLogic">
+    // 1. إضافة عنصر iframe للمشغل ليدعم روابط Embed
+    const vContainer = document.querySelector('.video-container');
+    const iframe = document.createElement('iframe');
+    iframe.id = 'embedContainer';
+    iframe.allowFullscreen = true;
+    vContainer.appendChild(iframe);
+
+    // 2. تطوير دالة openPlayer (بدون لمس القديمة) لتدعم Embed
+    const oldOpenPlayer = openPlayer;
+    openPlayer = function(url, name) {
+        const vidElement = document.getElementById('mainVideo');
+        const embElement = document.getElementById('embedContainer');
+        
+        // التحقق إذا كان الرابط Embed (لا ينتهي بـ m3u8)
+        if (!url.includes('.m3u8') && (url.includes('http') || url.includes('embed'))) {
+            vidElement.style.display = 'none';
+            embElement.style.display = 'block';
+            embElement.src = url;
+            
+            document.getElementById('playerUI').style.display = 'flex';
+            document.getElementById('nowPlayingTitle').innerText = name;
+        } else {
+            // إذا كان رابط m3u8 عادي استخدم الدالة القديمة
+            vidElement.style.display = 'block';
+            embElement.style.display = 'none';
+            embElement.src = '';
+            oldOpenPlayer(url, name);
+        }
+    };
+
+    // 3. تطوير دالة closePlayer لتمسح رابط الـ iframe عند الغلق
+    const oldClosePlayer = closePlayer;
+    closePlayer = function() {
+        document.getElementById('embedContainer').src = '';
+        oldClosePlayer();
+    };
+
+    // 4. جلب القنوات من ملف JSON الخارجي
+    async function syncWithExternalJSON() {
+        try {
+            const res = await fetch('channels.json');
+            if (!res.ok) return;
+            const customChannels = await res.json();
+            
+            const waitAll = setInterval(() => {
+                if (allChannels.length > 0) {
+                    // دمج قنوات الـ JSON في المقدمة
+                    allChannels = [...customChannels, ...allChannels];
+                    displayChannels(allChannels);
+                    clearInterval(waitAll);
+                }
+            }, 2000);
+        } catch (e) { console.error("JSON Error"); }
+    }
+
+    syncWithExternalJSON();
+</script>
+
 </body>
 </html>
