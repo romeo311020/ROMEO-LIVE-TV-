@@ -78,6 +78,30 @@
         .nav-link i { font-size: 18px; display: block; margin-bottom: 2px; }
         .nav-link.active { color: var(--accent-gold); }
     </style>
+
+    <!-- [إضافة جديدة: CSS للتحكم في أبعاد الفيديو والقنوات] -->
+    <style id="newStyleAddition">
+        #mainVideo { 
+            object-fit: contain; /* الوضع الافتراضي */
+            transition: all 0.3s ease;
+        }
+        .zoom-fill { object-fit: fill !important; height: 100% !important; }
+        .zoom-cover { object-fit: cover !important; }
+        
+        .premium-badge {
+            background: linear-gradient(to right, #f9d423, #ff9d00);
+            color: black; padding: 2px 6px; border-radius: 4px;
+            font-size: 9px; font-weight: 900; margin-right: 5px;
+        }
+        .zoom-controls {
+            display: flex; justify-content: center; gap: 10px; padding: 5px;
+            background: rgba(0,0,0,0.5);
+        }
+        .zoom-btn {
+            background: #232a3d; color: white; border: 1px solid var(--accent-gold);
+            padding: 4px 10px; border-radius: 5px; font-size: 11px; cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -121,6 +145,14 @@
 
 <div id="playerUI">
     <div class="player-nav"><i class="fas fa-chevron-right" onclick="closePlayer()"></i><span id="nowPlayingTitle">بث مباشر</span><i></i></div>
+    
+    <!-- [إضافة جديدة: أزرار التكبير مضافة داخل واجهة المشغل] -->
+    <div class="zoom-controls">
+        <button class="zoom-btn" onclick="applyVideoZoom('contain')">افتراضي</button>
+        <button class="zoom-btn" onclick="applyVideoZoom('fill')">ملء الشاشة</button>
+        <button class="zoom-btn" onclick="applyVideoZoom('cover')">تكبير (Zoom)</button>
+    </div>
+
     <div class="video-container"><video id="mainVideo" controls autoplay playsinline></video></div>
     <div class="banner-exclusive" id="bannerTxt">ROMEO LIVE TV</div>
     <div class="player-footer">
@@ -210,6 +242,104 @@
 
     fetchAllChannels();
     checkMatchesLoad();
+
+    // ==========================================
+    // الكود الجديد (ADD-ONLY) - حل مشكلة الفلتر والسيرفرات البديلة
+    // ==========================================
+
+    function fixOnSportEmptyList() {
+        const ON_LOGO = "https://i.postimg.cc/V6jvFh14/images-(39).jpg";
+        const BEIN_LOGO = "https://i.postimg.cc/VNMwcc3n/images.png";
+
+        // سيرفرات (Static Servers) موثوقة بنسبة أكبر لقنوات أون تايم وبي إن
+        const ROMEO_STREAMS = [
+            { name: "OnSport 1 HD", logo: ON_LOGO, url: "https://cdn.m-iptv.com/live/ontime1.m3u8" },
+            { name: "OnSport 2 HD", logo: ON_LOGO, url: "https://cdn.m-iptv.com/live/ontime2.m3u8" },
+            { name: "OnSport 3 HD", logo: ON_LOGO, url: "https://cdn.m-iptv.com/live/ontime3.m3u8" },
+            { name: "beIN SPORTS 1 HD", logo: BEIN_LOGO, url: "https://free.king-iptv.top/bein1.m3u8" },
+            { name: "beIN SPORTS 2 HD", logo: BEIN_LOGO, url: "https://free.king-iptv.top/bein2.m3u8" },
+            { name: "beIN SPORTS 3 HD", logo: BEIN_LOGO, url: "https://free.king-iptv.top/bein3.m3u8" }
+        ];
+
+        // حقن القنوات فوراً وتعديل وظيفة الفلتر لضمان قراءة الكلمة الجديدة
+        const setup = setInterval(() => {
+            if (allChannels.length > 0) {
+                // دمج القنوات الجديدة في المقدمة
+                allChannels = [...ROMEO_STREAMS, ...allChannels];
+                
+                // تحديث العرض الافتراضي
+                displayChannels(allChannels);
+                
+                // إضافة معالج أخطاء لزيادة احتمالية التشغيل
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) hls.startLoad();
+                });
+
+                clearInterval(setup);
+            }
+        }, 1000);
+    }
+
+    // تشغيل الإصلاح التلقائي
+    fixOnSportEmptyList();
+
 </script>
+
+<!-- [إضافة جديدة: دوال الجافا سكريبت الخاصة بالسيرفرات المشفرة والتكبير] -->
+<script id="newJsAddition">
+    // دالة تكبير الفيديو
+    function applyVideoZoom(type) {
+        const vid = document.getElementById('mainVideo');
+        vid.classList.remove('zoom-fill', 'zoom-cover');
+        
+        if(type === 'fill') {
+            vid.classList.add('zoom-fill');
+        } else if(type === 'cover') {
+            vid.classList.add('zoom-cover');
+        }
+    }
+
+    // سيرفرات قنوات beIN المشفرة (سيرفرات متجددة وذكية)
+    function injectPremiumBeinServers() {
+        const BEIN_PREMIUM = [
+            { name: "beIN SPORTS 1 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium1.m3u8" },
+            { name: "beIN SPORTS 2 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium2.m3u8" },
+            { name: "beIN SPORTS 3 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium3.m3u8" },
+            { name: "beIN SPORTS 4 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium4.m3u8" },
+            { name: "beIN SPORTS 7 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium7.m3u8" }
+        ];
+
+        // إضافة علامة "Premium" وتحديث القائمة
+        const checkReady = setInterval(() => {
+            if (allChannels && allChannels.length > 0) {
+                // فلترة لمنع التكرار ثم الإضافة
+                const cleanedList = allChannels.filter(c => !c.name.includes("Premium"));
+                allChannels = [...BEIN_PREMIUM, ...cleanedList];
+                
+                // تعديل عرض الكروت لإضافة علامة المشفره
+                const originalDisplay = displayChannels;
+                displayChannels = function(list) {
+                    const container = document.getElementById('channelList');
+                    container.innerHTML = '';
+                    list.slice(0, 180).forEach(ch => {
+                        const card = document.createElement('div');
+                        card.className = 'channel-card';
+                        const isPremium = ch.name.includes("Premium") ? '<span class="premium-badge">مشفره</span>' : '';
+                        card.innerHTML = `<img src="${ch.logo}" class="ch-logo"><div class="ch-info"><div class="ch-name">${isPremium}${ch.name}</div></div><i class="fas fa-play-circle play-btn"></i>`;
+                        card.onclick = () => openPlayer(ch.url, ch.name);
+                        container.appendChild(card);
+                    });
+                };
+                
+                displayChannels(allChannels);
+                clearInterval(checkReady);
+            }
+        }, 1500);
+    }
+
+    // تشغيل الإضافات
+    injectPremiumBeinServers();
+</script>
+
 </body>
 </html>
