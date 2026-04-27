@@ -17,6 +17,23 @@
       "link": "https://new.aflam4you.net/bein-sports-1-koora-live-bein1-hd-funding-tv_68.html",
       "link2": "",
       "download_url": ""
+    },
+    {
+      "id": 1777258023500,
+      "team1": {
+        "name": "الاهلي",
+        "logo": "https://i.postimg.cc/G2D4pJW8/8200.webp",
+        "lineup": ""
+      },
+      "team2": {
+        "name": "بيراميدز",
+        "logo": "https://i.postimg.cc/13z4FZkj/22143.png",
+        "lineup": ""
+      },
+      "status": "not_started",
+      "link": "https://new.aflam4you.net/on-time-sports-1-egypt-timesport-funding-tv_445.html",
+      "link2": "",
+      "download_url": ""
     }
   ],
   "tomorrow": []
