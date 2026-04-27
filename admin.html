@@ -3,243 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROMEO TV | إدارة القنوات</title>
+    <title>ROMEO ADMIN | لوحة التحكم</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #f9d423; --bg: #050811; --card: #111827; --danger: #ff4757; --input-bg: #1e293b; }
+        :root {
+            --gold: #ffc107;
+            --dark-bg: #12141d;
+            --card-bg: #1c1f2b;
+            --input-bg: #0a0c12;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: #fff; }
+        body { background: var(--dark-bg); color: #fff; }
 
-        /* شاشة التحميل والمزامنة */
-        #loader { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid var(--gold); width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* --- Login Screen --- */
+        #loginScreen {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .github-logo { font-size: 60px; color: var(--gold); margin-bottom: 20px; }
+        h1 { font-size: 24px; margin-bottom: 10px; font-weight: 900; letter-spacing: 1px; }
+        p { color: #888; font-size: 14px; margin-bottom: 30px; }
 
-        .screen { display: none; padding: 20px; animation: fadeIn 0.3s; }
-        .active-screen { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .form-group { margin-bottom: 15px; position: relative; }
+        input, select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid #2d3245;
+            padding: 15px;
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--gold); }
 
-        header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
-        .back-btn { background: #1e293b; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; border: none; color: white; }
+        .btn-login {
+            width: 100%;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
 
-        /* البطاقات والأزرار */
-        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
-        .box { background: var(--card); padding: 25px; border-radius: 18px; display: flex; align-items: center; gap: 15px; border: 1px solid #1e293b; cursor: pointer; transition: 0.3s; }
-        .box:hover { border-color: var(--gold); background: #161e2d; }
+        /* --- Dashboard Screen --- */
+        #dashboard { display: none; padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         
-        .channel-item { background: var(--card); padding: 12px; border-radius: 12px; display: flex; gap: 15px; margin-bottom: 10px; border: 1px solid #1e293b; align-items: center; }
-        .channel-item img { width: 50px; height: 50px; border-radius: 8px; object-fit: contain; background: #000; }
-        .info { flex: 1; }
-        .actions { display: flex; gap: 15px; margin-top: 5px; }
-        .act-btn { cursor: pointer; font-size: 13px; font-weight: bold; }
+        .cat-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .cat-item {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .cat-item:hover { border-color: var(--gold); }
 
-        input, select { width: 100%; padding: 15px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid #374151; border-radius: 10px; color: #fff; outline: none; }
-        .save-btn { background: var(--gold); color: #000; width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: 900; font-size: 18px; cursor: pointer; }
+        /* --- Channels Editor --- */
+        #editorArea { display: none; }
+        .channel-item {
+            background: var(--card-bg);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chan-info { display: flex; align-items: center; gap: 15px; }
+        .chan-img { width: 40px; height: 40px; border-radius: 5px; object-fit: cover; }
+        .actions button {
+            background: none; border: none; color: #888; margin-left: 10px; cursor: pointer; font-size: 18px;
+        }
+        .btn-add { background: var(--gold); color: #000; padding: 10px 20px; border-radius: 8px; font-weight: bold; margin-bottom: 20px; border: none; cursor: pointer; }
+        
+        /* Modal */
+        #modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 100;
+        }
+        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
     </style>
 </head>
 <body>
 
-<div id="loader">
-    <div class="spinner"></div>
-    <p style="margin-top:15px">جاري تحديث البيانات على GitHub...</p>
-</div>
-
-<!-- شاشة تسجيل الدخول[span_2](start_span)[span_2](end_span) -->
-<div id="screen-login" class="screen active-screen">
-    <div style="text-align:center; max-width: 400px; margin: 80px auto;">
-        <h1 style="color:var(--gold); font-size: 40px; margin-bottom: 10px;">ROMEO ADMIN</h1>
-        <p style="opacity: 0.7; margin-bottom: 30px;">أدخل بيانات GitHub للتحكم في القنوات</p>
-        <input type="password" id="token" placeholder="GitHub Personal Access Token">
-        <input type="text" id="repo" placeholder="المستودع (مثال: username/repo-name)">
-        <button class="save-btn" onclick="login()">دخول للوحة التحكم 🔓</button>
+    <div id="loginScreen">
+        <div class="login-card">
+            <i class="fab fa-github github-logo"></i>
+            <h1>ROMEO ADMIN</h1>
+            <p>سجل الدخول باستخدام بيانات GitHub</p>
+            <div class="form-group">
+                <input type="password" id="ghToken" placeholder="GitHub Personal Access Token">
+            </div>
+            <div class="form-group">
+                <input type="text" id="ghRepo" placeholder="username/repository">
+            </div>
+            <button class="btn-login" onclick="login()">دخول إلى اللوحة</button>
+        </div>
     </div>
-</div>
 
-<header id="nav" style="display:none">
-    <button class="back-btn" id="backBtn" onclick="goBack()" style="display:none">⬅ رجوع</button>
-    <div style="font-weight:900; color: var(--gold);">إدارة البث المباشر</div>
-</header>
-
-<!-- الشاشة الرئيسية: الأقسام[span_3](start_span)[span_3](end_span) -->
-<div id="screen-home" class="screen">
-    <h2>أقسام القنوات 📺</h2>
-    <div class="grid">
-        <div class="box" onclick="openCategory('beIN')"><i class="fas fa-star" style="color:#7d2ae8"></i> <b>beIN SPORTS</b></div>
-        <div class="box" onclick="openCategory('OnSport')"><i class="fas fa-futbol" style="color:#e91e63"></i> <b>OnSport</b></div>
-        <div class="box" onclick="openCategory('MBC')"><i class="fas fa-tv" style="color:#00bcd4"></i> <b>MBC & SHAHID</b></div>
-        <div class="box" onclick="openCategory('News')"><i class="fas fa-globe" style="color:#4caf50"></i> <b>قنوات الأخبار</b></div>
+    <div id="dashboard">
+        <header>
+            <h2>الأقسام</h2>
+            <button onclick="logout()" style="color:red; background:none; border:none;">خروج</button>
+        </header>
+        <div class="cat-list" id="categoryGrid"></div>
     </div>
-</div>
 
-<!-- شاشة عرض القنوات[span_4](start_span)[span_4](end_span) -->
-<div id="screen-channels" class="screen">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h2 id="cat-title">القنوات</h2>
-        <button onclick="openForm()" style="background:var(--gold); color:#000; padding:8px 15px; border-radius:8px; border:none; font-weight:bold;">➕ إضافة قناة</button>
+    <div id="editorArea" style="padding: 20px;">
+        <button onclick="showDashboard()" style="color:var(--gold); margin-bottom: 20px; background:none; border:none; cursor:pointer;">
+            <i class="fas fa-arrow-right"></i> العودة للأقسام
+        </button>
+        <h2 id="currentCatLabel" style="margin-bottom: 20px;">اسم القسم</h2>
+        <button class="btn-add" onclick="openModal()">+ إضافة قناة جديدة</button>
+        <div id="channelsList"></div>
+        <button class="btn-login" style="margin-top: 30px;" onclick="saveToGithub()">حفظ التغييرات النهائية إلى GitHub</button>
     </div>
-    <div id="channels-list"></div>
-</div>
 
-<!-- نموذج الإضافة والتعديل[span_5](start_span)[span_5](end_span) -->
-<div id="screen-form" class="screen">
-    <div style="max-width: 500px; margin: 0 auto;">
-        <h2 id="form-title" style="margin-bottom: 20px;">إضافة قناة جديدة</h2>
-        <input type="hidden" id="editId">
-        <label>اسم القناة:</label>
-        <input type="text" id="name" placeholder="مثال: beIN Sports 1">
-        <label>رابط اللوجو:</label>
-        <input type="text" id="img" placeholder="رابط الصورة المباشر">
-        <label>رابط البث (M3U8):</label>
-        <input type="text" id="link" placeholder="http://.../index.m3u8">
-        <button class="save-btn" onclick="saveData()">حفظ وإرسال للموقع ✅</button>
+    <div id="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">إضافة قناة</h3><br>
+            <input type="text" id="chName" placeholder="اسم القناة"><br><br>
+            <input type="text" id="chImg" placeholder="رابط صورة القناة"><br><br>
+            <input type="text" id="chUrl" placeholder="رابط بث القناة (Embed)"><br><br>
+            <button class="btn-login" onclick="confirmAdd()">تأكيد</button>
+            <button onclick="closeModal()" style="width:100%; background:none; color:#888; border:none; margin-top:10px;">إلغاء</button>
+        </div>
     </div>
-</div>
 
-<script>
-    let channels = [];
-    let config = { token: '', repo: '' };
-    let currentCat = '';
+    <script>
+        let G_TOKEN = "";
+        let G_REPO = "";
+        let G_DATA = [];
+        let G_SHA = "";
+        let currentCat = "";
+        let editIndex = -1;
 
-    // الدخول وجلب البيانات من ملف channels.json[span_6](start_span)[span_6](end_span)
-    async function login() {
-        config.token = document.getElementById('token').value;
-        config.repo = document.getElementById('repo').value;
-        if(!config.token || !config.repo) return alert("يرجى إدخال البيانات");
-        
-        showLoader(true);
-        try {
-            const res = await fetch(`https://api.github.com/repos/${config.repo}/contents/channels.json`, {
-                headers: { 'Authorization': `token ${config.token}` }
-            });
-            const file = await res.json();
-            const content = JSON.parse(decodeURIComponent(escape(atob(file.content))));
-            channels = content;
+        const categories = [
+            { name: "On Time Sport", id: "ontime", icon: "fa-trophy" },
+            { name: "beIN Sports", id: "bein", icon: "fa-futbol" },
+            { name: "قنوات مصرية", id: "egypt", icon: "fa-flag" },
+            { name: "قنوات سعودية", id: "saudi", icon: "fa-mosque" },
+            { name: "قنوات MBC", id: "mbc", icon: "fa-star" },
+            { name: "أفلام وسينما", id: "movies", icon: "fa-film" }
+        ];
+
+        async function login() {
+            G_TOKEN = document.getElementById('ghToken').value;
+            G_REPO = document.getElementById('ghRepo').value;
+            if(!G_TOKEN || !G_REPO) return alert("يرجى إدخال البيانات");
             
-            document.getElementById('screen-login').classList.remove('active-screen');
-            document.getElementById('nav').style.display = 'flex';
-            showScreen('screen-home');
-        } catch (e) { alert("فشل الاتصال! تأكد من التوكن واسم المستودع ووجود ملف channels.json"); }
-        showLoader(false);
-    }
+            try {
+                // جلب الملف من جيت هب
+                const res = await fetch(`https://api.github.com/repos/${G_REPO}/contents/channels.json`, {
+                    headers: { 'Authorization': `token ${G_TOKEN}` }
+                });
+                const json = await res.json();
+                G_SHA = json.sha;
+                G_DATA = JSON.parse(atob(json.content));
+                
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                renderCategories();
+            } catch (e) {
+                alert("خطأ في الاتصال: تأكد من التوكن واسم المستودع وجود ملف channels.json");
+            }
+        }
 
-    function openCategory(cat) {
-        currentCat = cat;
-        document.getElementById('cat-title').innerText = `قنوات ${cat}`;
-        renderChannels();
-        showScreen('screen-channels');
-    }
-
-    function renderChannels() {
-        const list = document.getElementById('channels-list');
-        list.innerHTML = '';
-        const filtered = channels.filter(c => c.category === currentCat);
-        
-        filtered.forEach(ch => {
-            list.innerHTML += `
-                <div class="channel-item">
-                    <img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/50'">
-                    <div class="info">
-                        <b>${ch.name}</b>
-                        <div class="actions">
-                            <span class="act-btn" style="color:#2e86de" onclick="editChannel('${ch.id}')">📝 تعديل</span>
-                            <span class="act-btn" style="color:var(--danger)" onclick="deleteChannel('${ch.id}')">🗑️ حذف</span>
-                        </div>
+        function renderCategories() {
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = "";
+            categories.forEach(cat => {
+                grid.innerHTML += `
+                    <div class="cat-item" onclick="openEditor('${cat.id}', '${cat.name}')">
+                        <i class="fas ${cat.icon}" style="font-size:30px; color:var(--gold); margin-bottom:10px;"></i>
+                        <div>${cat.name}</div>
                     </div>
-                </div>`;
-        });
-    }
+                `;
+            });
+        }
 
-    function openForm(id = null) {
-        document.getElementById('editId').value = id || '';
-        document.getElementById('name').value = '';
-        document.getElementById('img').value = '';
-        document.getElementById('link').value = '';
-        if(!id) document.getElementById('form-title').innerText = "إضافة قناة جديدة";
-        showScreen('screen-form');
-    }
-
-    function editChannel(id) {
-        const ch = channels.find(c => c.id == id);
-        openForm(id);
-        document.getElementById('name').value = ch.name;
-        document.getElementById('img').value = ch.logo;
-        document.getElementById('link').value = ch.url;
-        document.getElementById('form-title').innerText = "تعديل بيانات القناة";
-    }
-
-    async function deleteChannel(id) {
-        if(confirm("هل أنت متأكد من حذف هذه القناة؟")) {
-            channels = channels.filter(c => c.id != id);
-            await syncWithGithub();
+        function openEditor(id, name) {
+            currentCat = id;
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('editorArea').style.display = 'block';
+            document.getElementById('currentCatLabel').innerText = name;
             renderChannels();
         }
-    }
 
-    async function saveData() {
-        const id = document.getElementById('editId').value;
-        const name = document.getElementById('name').value;
-        const img = document.getElementById('img').value;
-        const link = document.getElementById('link').value;
-
-        if(!name || !link) return alert("الاسم والرابط مطلوبان");
-
-        const newCh = {
-            id: id || Date.now().toString(),
-            name,
-            logo: img,
-            url: link,
-            category: currentCat
-        };
-
-        if(id) {
-            const idx = channels.findIndex(c => c.id == id);
-            channels[idx] = newCh;
-        } else {
-            channels.push(newCh);
+        function showDashboard() {
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('editorArea').style.display = 'none';
         }
 
-        await syncWithGithub();
-        showScreen('screen-channels');
-        renderChannels();
-    }
-
-    // مزامنة البيانات مع GitHub (تحديث ملف JSON)[span_7](start_span)[span_7](end_span)
-    async function syncWithGithub() {
-        showLoader(true);
-        try {
-            const res = await fetch(`https://api.github.com/repos/${config.repo}/contents/channels.json`, {
-                headers: { 'Authorization': `token ${config.token}` }
+        function renderChannels() {
+            const list = document.getElementById('channelsList');
+            list.innerHTML = "";
+            G_DATA.forEach((ch, index) => {
+                if(ch.cat === currentCat) {
+                    list.innerHTML += `
+                        <div class="channel-item">
+                            <div class="chan-info">
+                                <img src="${ch.img}" class="chan-img">
+                                <span>${ch.name}</span>
+                            </div>
+                            <div class="actions">
+                                <button onclick="editChannel(${index})"><i class="fas fa-edit"></i></button>
+                                <button onclick="deleteChannel(${index})" style="color:#ff4444;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                }
             });
-            const file = await res.json();
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(channels, null, 2))));
+        }
+
+        function openModal() {
+            editIndex = -1;
+            document.getElementById('chName').value = "";
+            document.getElementById('chImg').value = "";
+            document.getElementById('chUrl').value = "";
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function editChannel(index) {
+            editIndex = index;
+            const ch = G_DATA[index];
+            document.getElementById('chName').value = ch.name;
+            document.getElementById('chImg').value = ch.img;
+            document.getElementById('chUrl').value = ch.url;
+            document.getElementById('modalTitle').innerText = "تعديل قناة";
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function confirmAdd() {
+            const newChan = {
+                name: document.getElementById('chName').value,
+                img: document.getElementById('chImg').value,
+                url: document.getElementById('chUrl').value,
+                cat: currentCat
+            };
+
+            if(editIndex === -1) {
+                G_DATA.push(newChan);
+            } else {
+                G_DATA[editIndex] = newChan;
+            }
             
-            await fetch(`https://api.github.com/repos/${config.repo}/contents/channels.json`, {
-                method: 'PUT',
-                headers: { 'Authorization': `token ${config.token}` },
-                body: JSON.stringify({
-                    message: "تحديث روابط القنوات من لوحة التحكم",
-                    content: content,
-                    sha: file.sha
-                })
-            });
-        } catch (e) { alert("حدث خطأ أثناء الحفظ على GitHub!"); }
-        showLoader(false);
-    }
+            closeModal();
+            renderChannels();
+        }
 
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.getElementById(id).classList.add('active-screen');
-        document.getElementById('backBtn').style.display = (id === 'screen-home') ? 'none' : 'block';
-    }
+        function deleteChannel(index) {
+            if(confirm("هل أنت متأكد من الحذف؟")) {
+                G_DATA.splice(index, 1);
+                renderChannels();
+            }
+        }
 
-    function goBack() {
-        const active = document.querySelector('.active-screen').id;
-        if(active === 'screen-channels') showScreen('screen-home');
-        else if(active === 'screen-form') showScreen('screen-channels');
-    }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    function showLoader(v) { document.getElementById('loader').style.display = v ? 'flex' : 'none'; }
-</script>
+        async function saveToGithub() {
+            if(!confirm("سيتم تحديث الملف على GitHub الآن، هل أنت متأكد؟")) return;
+            
+            try {
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(G_DATA, null, 2))));
+                const res = await fetch(`https://api.github.com/repos/${G_REPO}/contents/channels.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${G_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: "Update channels via Admin Panel",
+                        content: content,
+                        sha: G_SHA
+                    })
+                });
+                
+                if(res.ok) {
+                    const resJson = await res.json();
+                    G_SHA = resJson.content.sha;
+                    alert("تم الحفظ بنجاح!");
+                } else {
+                    alert("فشل الحفظ، تأكد من صلاحيات التوكن");
+                }
+            } catch (e) {
+                alert("خطأ أثناء الحفظ");
+            }
+        }
+
+        function logout() { location.reload(); }
+    </script>
 </body>
 </html>

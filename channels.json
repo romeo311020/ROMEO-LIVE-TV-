@@ -1,79 +1,14 @@
 [
   {
-    "id": "fixed_2",
-    "name": "beIN SPORTS NEWS",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://beinsports.akamaized.net/ps/beinsports/news.m3u8",
-    "category": "beIN"
+    "name": "On Time Sport 1 HD",
+    "cat": "ontime",
+    "url": "https://new.aflam4you.net/embed.php?vid=445",
+    "img": "https://i.postimg.cc/8PS1RV6X/images-(2).jpg"
   },
   {
-    "id": "stream_1",
-    "name": "OnSport 1 HD",
-    "logo": "https://i.postimg.cc/V6jvFh14/images-(39).jpg",
-    "url": "https://cdn.m-iptv.com/live/ontime1.m3u8",
-    "category": "OnSport"
-  },
-  {
-    "id": "stream_2",
-    "name": "OnSport 2 HD",
-    "logo": "https://i.postimg.cc/V6jvFh14/images-(39).jpg",
-    "url": "https://cdn.m-iptv.com/live/ontime2.m3u8",
-    "category": "OnSport"
-  },
-  {
-    "id": "stream_4",
     "name": "beIN SPORTS 1 HD",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://free.king-iptv.top/bein1.m3u8",
-    "category": "beIN"
-  },
-  {
-    "id": "stream_5",
-    "name": "beIN SPORTS 2 HD",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://free.king-iptv.top/bein2.m3u8",
-    "category": "beIN"
-  },
-  {
-    "id": "stream_6",
-    "name": "beIN SPORTS 3 HD",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://free.king-iptv.top/bein3.m3u8",
-    "category": "beIN"
-  },
-  {
-    "id": "premium_1",
-    "name": "beIN SPORTS 1 Premium",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://beinsports.akamaized.net/ps/beinsports/premium1.m3u8",
-    "category": "beIN"
-  },
-  {
-    "id": "premium_2",
-    "name": "beIN SPORTS 2 Premium",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://beinsports.akamaized.net/ps/beinsports/premium2.m3u8",
-    "category": "beIN"
-  },
-  {
-    "id": "premium_3",
-    "name": "beIN SPORTS 3 Premium",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://beinsports.akamaized.net/ps/beinsports/premium3.m3u8",
-    "category": "beIN"
-  },
-  {
-    "id": "premium_4",
-    "name": "beIN SPORTS 4 Premium",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://beinsports.akamaized.net/ps/beinsports/premium4.m3u8",
-    "category": "beIN"
-  },
-  {
-    "id": "premium_7",
-    "name": "beIN SPORTS 7 Premium",
-    "logo": "https://i.postimg.cc/VNMwcc3n/images.png",
-    "url": "https://beinsports.akamaized.net/ps/beinsports/premium7.m3u8",
-    "category": "beIN"
+    "cat": "bein",
+    "url": "https://new.aflam4you.net/embed.php?vid=68",
+    "img": "https://i.postimg.cc/8PS1RV6X/images-(2).jpg"
   }
 ]

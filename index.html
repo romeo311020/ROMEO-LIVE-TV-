@@ -2,411 +2,355 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROMEO LIVE TV | PRO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ROMEO LIVE TV | Premium Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
     <style>
         :root {
-            --main-bg: #050811;
-            --card-bg: #121829;
-            --accent-gold: #f9d423;
-            --accent-red: #ff3b3b;
-            --text-gray: #a0a6b5;
+            --gold: #d4af37;
+            --dark-gold: #a68a2d;
+            --bg-black: #080808;
+            --card-bg: #121212;
+            --glass: rgba(212, 175, 55, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-        body { background-color: var(--main-bg); color: white; padding-bottom: 70px; overflow-x: hidden; font-size: 13px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
 
+        body { 
+            background: var(--bg-black); 
+            color: #fff; 
+            padding-bottom: 80px; 
+            overflow-x: hidden;
+        }
+
+        /* --- Header & Search Bar --- */
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 15px; background: rgba(5, 8, 17, 0.95);
-            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
+            background: rgba(8, 8, 8, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--glass);
+            position: sticky;
+            top: 0; z-index: 1000;
         }
-        .logo-text { font-size: 18px; font-weight: 900; order: 1; }
-        .logo-text span { color: var(--accent-gold); }
-        .btn-download {
-            background: linear-gradient(45deg, #f9d423, #ff9d00);
-            color: #000; padding: 5px 12px; border-radius: 15px;
-            text-decoration: none; font-weight: bold; font-size: 11px; order: 2;
+
+        .search-wrapper {
+            flex-grow: 1;
+            position: relative;
         }
 
-        .ticker-wrapper { background: var(--accent-red); color: white; padding: 4px 0; overflow: hidden; white-space: nowrap; font-size: 10px; font-weight: bold; }
-        .ticker-text { display: inline-block; animation: ticker 25s linear infinite; }
-        @keyframes ticker { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
-        .search-area { padding: 8px 15px; }
-        .search-wrapper { position: relative; background: var(--card-bg); border-radius: 10px; border: 1px solid #232a3d; }
-        .search-wrapper input { width: 100%; background: transparent; border: none; padding: 8px 35px 8px 10px; color: white; outline: none; font-size: 12px; }
-        .search-wrapper i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--accent-gold); font-size: 14px; }
-
-        .main-category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 15px; }
-        .cat-btn {
-            height: 60px; border-radius: 10px; position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            border: 1px solid #232a3d; background-size: cover; background-position: center;
+        .search-wrapper input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 10px 40px 10px 15px;
+            border-radius: 50px;
+            color: #fff;
+            outline: none;
+            transition: var(--transition);
         }
-        .cat-btn::before { content: ""; position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
-        .cat-btn span { font-weight: bold; font-size: 12px; z-index: 2; }
 
-        .section-header { padding: 10px 15px 5px; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        .section-header::after { content: ""; flex: 1; height: 1px; background: #232a3d; }
-        
-        .matches-widget { padding: 10px 15px; min-height: 50px; }
-        #noMatchesMsg { text-align: center; padding: 20px; background: var(--card-bg); border-radius: 10px; border: 1px solid #232a3d; display: none; }
+        .search-wrapper input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
 
-        .channel-container { padding: 5px 15px; display: flex; flex-direction: column; gap: 8px; }
-        .channel-card { background: var(--card-bg); border: 1px solid #1f263e; border-radius: 12px; display: flex; align-items: center; padding: 8px 12px; cursor: pointer; }
-        .ch-logo { width: 35px; height: 35px; border-radius: 6px; object-fit: contain; background: #000; }
-        .ch-info { flex: 1; margin-right: 12px; }
-        .ch-name { font-weight: bold; font-size: 12px; }
-        .play-btn { color: var(--accent-gold); font-size: 18px; }
-
-        #playerUI { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: none; flex-direction: column; }
-        .player-nav { padding: 10px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); }
-        .video-container { flex: 1; display: flex; align-items: center; background: #000; }
-        video { width: 100%; }
-        .banner-exclusive { padding: 10px; text-align: center; background: #080b14; color: var(--accent-gold); font-weight: bold; font-size: 13px; }
-        .player-footer { padding: 15px; display: flex; gap: 8px; background: #050811; }
-        .f-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
-        .f-btn.main { background: var(--accent-gold); color: #000; }
-        .f-btn.sec { background: #232a3d; color: #fff; }
-
-        .bottom-bar { position: fixed; bottom: 0; width: 100%; height: 60px; background: #0a0e1a; border-top: 1px solid #1f263e; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-link { text-decoration: none; color: var(--text-gray); text-align: center; font-size: 10px; }
-        .nav-link i { font-size: 18px; display: block; margin-bottom: 2px; }
-        .nav-link.active { color: var(--accent-gold); }
-    </style>
-
-    <!-- [إضافة جديدة: CSS للتحكم في أبعاد الفيديو والقنوات] -->
-    <style id="newStyleAddition">
-        #mainVideo { 
-            object-fit: contain; /* الوضع الافتراضي */
-            transition: all 0.3s ease;
+        .search-wrapper i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
         }
-        .zoom-fill { object-fit: fill !important; height: 100% !important; }
-        .zoom-cover { object-fit: cover !important; }
-        
-        .premium-badge {
-            background: linear-gradient(to right, #f9d423, #ff9d00);
-            color: black; padding: 2px 6px; border-radius: 4px;
-            font-size: 9px; font-weight: 900; margin-right: 5px;
+
+        /* --- Hero Section --- */
+        .premium-banner {
+            margin: 15px 5%;
+            height: 180px;
+            background: linear-gradient(45deg, #000, #1a1a1a);
+            border-radius: 20px;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .zoom-controls {
-            display: flex; justify-content: center; gap: 10px; padding: 5px;
-            background: rgba(0,0,0,0.5);
+
+        .premium-banner h2 { font-size: 2rem; color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+
+        /* --- Categories Grid --- */
+        .section-header { padding: 20px 5% 10px; display: flex; align-items: center; justify-content: space-between; }
+        .section-header h3 { color: var(--gold); font-size: 1.2rem; }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+            gap: 12px;
+            padding: 10px 5%;
         }
-        .zoom-btn {
-            background: #232a3d; color: white; border: 1px solid var(--accent-gold);
-            padding: 4px 10px; border-radius: 5px; font-size: 11px; cursor: pointer;
+
+        .cat-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px 10px;
+            text-align: center;
+            border: 1px solid #1f1f1f;
+            transition: var(--transition);
+            cursor: pointer;
+            animation: fadeIn 0.5s ease forwards;
         }
+
+        .cat-card:hover { transform: scale(1.05); border-color: var(--gold); background: var(--glass); }
+
+        .cat-card i { font-size: 2rem; color: var(--gold); margin-bottom: 10px; display: block; }
+
+        .cat-card span { font-size: 0.8rem; font-weight: bold; }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Full Screen Player --- */
+        .player-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .video-container { flex-grow: 1; background: #000; }
+        .video-container iframe { width: 100%; height: 100%; border: none; }
+
+        .player-nav {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+        }
+
+        /* --- Bottom Nav --- */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0; width: 100%;
+            background: rgba(10, 10, 10, 0.98);
+            border-top: 1px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 1000;
+        }
+
+        .nav-btn { color: #888; text-decoration: none; text-align: center; font-size: 0.7rem; }
+        .nav-btn i { font-size: 1.4rem; display: block; }
+        .nav-btn.active { color: var(--gold); }
+
+        /* --- Back Button --- */
+        .back-area { padding: 10px 5%; display: none; }
+        .btn-back { background: var(--gold); color: #000; border: none; padding: 8px 20px; border-radius: 5px; font-weight: bold; }
+
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-text">ROMEO <span>LIVE TV</span></div>
-    <a href="https://www.appcreator24.com/app3955137-obzs8n" class="btn-download" target="_blank">تنزيل التطبيق</a>
-</header>
+    <header>
+        <div class="logo" style="color: var(--gold); font-weight: 900;">ROMEO</div>
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="ابحث عن قناة..." onkeyup="filterChannels()">
+        </div>
+    </header>
 
-<div class="ticker-wrapper">
-    <div class="ticker-text">
-        &nbsp;&nbsp;&nbsp;&nbsp; تم تحديث قناة OnSport .. تابع البث المباشر الآن بدون تقطيع عبر ROMEO LIVE TV .. مشاهدة ممتعة &nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
-</div>
+    <div id="mainView">
+        <div class="premium-banner">
+            <div>
+                <h2>ROMEO LIVE TV</h2>
+                <p style="color: #888;">استمتع بالبث المباشر الفاخر</p>
+            </div>
+        </div>
 
-<div class="search-area">
-    <div class="search-wrapper">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن قناة...">
-    </div>
-</div>
-
-<div class="main-category-grid">
-    <div class="cat-btn" style="background-image: url('https://i.postimg.cc/VNMwcc3n/images.png');" onclick="filterChannels('beIN')"><span>beIN SPORTS</span></div>
-    <div class="cat-btn" style="background-image: url('https://i.postimg.cc/dDMRprdw/images-(37).jpg');" onclick="filterChannels('MBC')"><span>MBC & SHAHID</span></div>
-    <div class="cat-btn" style="background-image: url('https://i.postimg.cc/V6jvFh14/images-(39).jpg');" onclick="filterChannels('OnSport')"><span>OnSport</span></div>
-    <div class="cat-btn" style="background-image: url('https://static.dw.com/image/18776694_605.jpg');" onclick="filterChannels('News')"><span>قنوات الأخبار</span></div>
-</div>
-
-<div class="section-header">مباريات اليوم الحقيقية</div>
-<div class="matches-widget">
-    <div id="fs-wm-539050" class="fs-widget" data-token="539050" data-league="" data-team="" data-sport="1" data-type="1" data-theme="dark" data-width="100%" data-height="auto"></div>
-    <script async src="https://widget.footystats.org/m/539050"></script>
-    <div id="noMatchesMsg">
-        <i class="fas fa-clock" style="font-size:24px; color:var(--accent-gold); margin-bottom:5px;"></i>
-        <p style="font-size:11px;">لا توجد مباريات جارية حالياً</p>
-    </div>
-</div>
-
-<div class="section-header">قنوات مميزة</div>
-<div class="channel-container" id="channelList"></div>
-
-<div id="playerUI">
-    <div class="player-nav"><i class="fas fa-chevron-right" onclick="closePlayer()"></i><span id="nowPlayingTitle">بث مباشر</span><i></i></div>
-    
-    <!-- [إضافة جديدة: أزرار التكبير مضافة داخل واجهة المشغل] -->
-    <div class="zoom-controls">
-        <button class="zoom-btn" onclick="applyVideoZoom('contain')">افتراضي</button>
-        <button class="zoom-btn" onclick="applyVideoZoom('fill')">ملء الشاشة</button>
-        <button class="zoom-btn" onclick="applyVideoZoom('cover')">تكبير (Zoom)</button>
+        <div class="section-header"><h3>الأقسام الرئيسية</h3></div>
+        <div class="cat-grid" id="categoryGrid">
+            </div>
     </div>
 
-    <div class="video-container"><video id="mainVideo" controls autoplay playsinline></video></div>
-    <div class="banner-exclusive" id="bannerTxt">ROMEO LIVE TV</div>
-    <div class="player-footer">
-        <button class="f-btn main" onclick="toggleFS()">ملء الشاشة</button>
-        <button class="f-btn sec" onclick="exitToLink()">رجوع</button>
+    <div id="channelView" style="display: none;">
+        <div class="back-area" style="display: block;">
+            <button class="btn-back" onclick="goBack()"><i class="fas fa-arrow-right"></i> العودة</button>
+        </div>
+        <div class="section-header"><h3 id="catTitle">اسم القسم</h3></div>
+        <div class="cat-grid" id="channelList">
+            </div>
     </div>
-</div>
 
-<nav class="bottom-bar">
-    <a href="javascript:location.reload();" class="nav-link active"><i class="fas fa-home"></i>الرئيسية</a>
-    <a href="https://wa.me/201027675035" class="nav-link" target="_blank"><i class="fab fa-whatsapp"></i>تواصل معنا</a>
-</nav>
+    <div id="playerOverlay" class="player-overlay">
+        <div class="player-nav">
+            <span id="nowPlaying" style="color: var(--gold); font-weight: bold;">جاري التحميل...</span>
+            <i class="fas fa-times" onclick="closePlayer()" style="font-size: 1.5rem; cursor: pointer;"></i>
+        </div>
+        <div class="video-container">
+            <iframe id="videoFrame" src="" allowfullscreen></iframe>
+        </div>
+    </div>
 
-<script>
-    const IPTV_URL = 'https://iptv-org.github.io/iptv/languages/ara.m3u';
-    let allChannels = [];
-    const video = document.getElementById('mainVideo');
-    const hls = new Hls();
+    <div class="bottom-bar">
+        <a href="#" class="nav-btn active" onclick="goBack()"><i class="fas fa-home"></i>الرئيسية</a>
+        <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="nav-btn"><i class="fas fa-globe"></i>الموقع</a>
+        <a href="https://wa.me/201027675035" class="nav-btn"><i class="fab fa-whatsapp"></i>تواصل</a>
+    </div>
 
-    function checkMatchesLoad() {
-        setTimeout(() => {
-            const widget = document.getElementById('fs-wm-539050');
-            const msg = document.getElementById('noMatchesMsg');
-            if (widget && widget.offsetHeight < 50) {
-                widget.style.display = 'none';
-                msg.style.display = 'block';
+    <script>
+        const categories = [
+            { name: "On Time Sport", icon: "fa-trophy", id: "ontime" },
+            { name: "beIN Sports", icon: "fa-futbol", id: "bein" },
+            { name: "قنوات مصرية", icon: "fa-flag", id: "egypt" },
+            { name: "قنوات سعودية", icon: "fa-mosque", id: "saudi" },
+            { name: "قنوات MBC", icon: "fa-star", id: "mbc" },
+            { name: "أفلام وسينما", icon: "fa-film", id: "movies" },
+            { name: "أطفال", icon: "fa-child", id: "kids" },
+            { name: "قنوات وثائقية", icon: "fa-leaf", id: "doc" },
+            { name: "قنوات إخبارية", icon: "fa-newspaper", id: "news" },
+            { name: "قنوات مسيحية", icon: "fa-cross", id: "christian" }
+        ];
+
+        // مصفوفة القنوات الآن فارغة تماماً
+        let allChannels = []; 
+
+        // دالة جديدة لجلب البيانات من JSON الخارجي على GitHub
+        async function fetchChannelsFromGithub() {
+            try {
+                // استبدل هذا الرابط برابط ملف الـ JSON الخام (Raw) الخاص بك على GitHub لاحقاً
+                const response = await fetch('channels.json'); 
+                allChannels = await response.json();
+                console.log("Channels Loaded Successfully");
+            } catch (error) {
+                console.error("Error Loading JSON:", error);
             }
-        }, 4000);
-    }
+        }
 
-    async function fetchAllChannels() {
-        try {
-            const response = await fetch(IPTV_URL);
-            const data = await response.text();
-            const lines = data.split('\n');
-            
-            const fixed = [
-                { name: "OnSport", logo: "https://i.postimg.cc/V6jvFh14/images-(39).jpg", url: "https://v-eg.m-iptv.com/ontime1/index.m3u8" },
-                { name: "beIN SPORTS NEWS", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/news.m3u8" }
-            ];
-            
-            allChannels = [...fixed];
-            lines.forEach((line, i) => {
-                if (line.startsWith('#EXTINF:')) {
-                    const name = line.split(',')[1]?.trim();
-                    const logo = line.match(/tvg-logo="([^"]+)"/)?.[1] || 'https://via.placeholder.com/40';
-                    const url = lines[i+1]?.trim();
-                    if (url && url.startsWith('http')) allChannels.push({ name, logo, url });
-                }
+        function init() {
+            const grid = document.getElementById('categoryGrid');
+            categories.forEach(cat => {
+                grid.innerHTML += `
+                    <div class="cat-card" onclick="openCategory('${cat.id}', '${cat.name}')">
+                        <i class="fas ${cat.icon}"></i>
+                        <span>${cat.name}</span>
+                    </div>
+                `;
             });
-            displayChannels(allChannels);
-        } catch(e) { }
-    }
+            fetchChannelsFromGithub(); // جلب القنوات عند التشغيل
+        }
 
-    function displayChannels(list) {
-        const container = document.getElementById('channelList');
-        container.innerHTML = '';
-        list.slice(0, 150).forEach(ch => {
-            const card = document.createElement('div');
-            card.className = 'channel-card';
-            card.innerHTML = `<img src="${ch.logo}" class="ch-logo"><div class="ch-info"><div class="ch-name">${ch.name}</div></div><i class="fas fa-play-circle play-btn"></i>`;
-            card.onclick = () => openPlayer(ch.url, ch.name);
-            container.appendChild(card);
-        });
-    }
-
-    function filterChannels(keyword) {
-        displayChannels(allChannels.filter(ch => ch.name.toLowerCase().includes(keyword.toLowerCase())));
-    }
-
-    document.getElementById('searchInput').oninput = (e) => {
-        const val = e.target.value.toLowerCase();
-        displayChannels(allChannels.filter(ch => ch.name.toLowerCase().includes(val)));
-    };
-
-    function openPlayer(url, name) {
-        document.getElementById('playerUI').style.display = 'flex';
-        document.getElementById('nowPlayingTitle').innerText = name;
-        document.getElementById('bannerTxt').innerText = `حصرياً قناة (${name}) على ROMEO LIVE TV`;
-        if (Hls.isSupported()) { hls.loadSource(url); hls.attachMedia(video); hls.on(Hls.Events.MANIFEST_PARSED, () => video.play()); }
-        else { video.src = url; video.play(); }
-    }
-
-    function closePlayer() { document.getElementById('playerUI').style.display = 'none'; video.pause(); hls.detachMedia(); }
-    function toggleFS() { if (video.requestFullscreen) video.requestFullscreen(); }
-    function exitToLink() { window.location.href = "https://romeo311020.github.io/romeo-live-tv-31/"; }
-
-    fetchAllChannels();
-    checkMatchesLoad();
-
-    // ==========================================
-    // الكود الجديد (ADD-ONLY) - حل مشكلة الفلتر والسيرفرات البديلة
-    // ==========================================
-
-    function fixOnSportEmptyList() {
-        const ON_LOGO = "https://i.postimg.cc/V6jvFh14/images-(39).jpg";
-        const BEIN_LOGO = "https://i.postimg.cc/VNMwcc3n/images.png";
-
-        // سيرفرات (Static Servers) موثوقة بنسبة أكبر لقنوات أون تايم وبي إن
-        const ROMEO_STREAMS = [
-            { name: "OnSport 1 HD", logo: ON_LOGO, url: "https://cdn.m-iptv.com/live/ontime1.m3u8" },
-            { name: "OnSport 2 HD", logo: ON_LOGO, url: "https://cdn.m-iptv.com/live/ontime2.m3u8" },
-            { name: "OnSport 3 HD", logo: ON_LOGO, url: "https://cdn.m-iptv.com/live/ontime3.m3u8" },
-            { name: "beIN SPORTS 1 HD", logo: BEIN_LOGO, url: "https://free.king-iptv.top/bein1.m3u8" },
-            { name: "beIN SPORTS 2 HD", logo: BEIN_LOGO, url: "https://free.king-iptv.top/bein2.m3u8" },
-            { name: "beIN SPORTS 3 HD", logo: BEIN_LOGO, url: "https://free.king-iptv.top/bein3.m3u8" }
-        ];
-
-        // حقن القنوات فوراً وتعديل وظيفة الفلتر لضمان قراءة الكلمة الجديدة
-        const setup = setInterval(() => {
-            if (allChannels.length > 0) {
-                // دمج القنوات الجديدة في المقدمة
-                allChannels = [...ROMEO_STREAMS, ...allChannels];
-                
-                // تحديث العرض الافتراضي
-                displayChannels(allChannels);
-                
-                // إضافة معالج أخطاء لزيادة احتمالية التشغيل
-                hls.on(Hls.Events.ERROR, (event, data) => {
-                    if (data.fatal) hls.startLoad();
+        function openCategory(id, name) {
+            document.getElementById('mainView').style.display = 'none';
+            document.getElementById('channelView').style.display = 'block';
+            document.getElementById('catTitle').innerText = name;
+            
+            const list = document.getElementById('channelList');
+            list.innerHTML = '';
+            
+            const filtered = allChannels.filter(ch => ch.cat === id);
+            if(filtered.length === 0) {
+                list.innerHTML = '<p style="padding:20px; color:#888;">سيتم إضافة القنوات قريباً...</p>';
+            } else {
+                filtered.forEach(ch => {
+                    list.innerHTML += `
+                        <div class="cat-card" onclick="playChannel('${ch.url}', '${ch.name}')">
+                            <img src="${ch.img || ''}" style="width:100%; border-radius:10px; margin-bottom:10px; display:${ch.img ? 'block' : 'none'}">
+                            <i class="fas fa-play-circle" style="display:${ch.img ? 'none' : 'block'}"></i>
+                            <span>${ch.name}</span>
+                        </div>
+                    `;
                 });
-
-                clearInterval(setup);
             }
-        }, 1000);
-    }
-
-    // تشغيل الإصلاح التلقائي
-    fixOnSportEmptyList();
-
-</script>
-
-<!-- [إضافة جديدة: دوال الجافا سكريبت الخاصة بالسيرفرات المشفرة والتكبير] -->
-<script id="newJsAddition">
-    // دالة تكبير الفيديو
-    function applyVideoZoom(type) {
-        const vid = document.getElementById('mainVideo');
-        vid.classList.remove('zoom-fill', 'zoom-cover');
-        
-        if(type === 'fill') {
-            vid.classList.add('zoom-fill');
-        } else if(type === 'cover') {
-            vid.classList.add('zoom-cover');
+            window.scrollTo(0,0);
         }
-    }
 
-    // سيرفرات قنوات beIN المشفرة (سيرفرات متجددة وذكية)
-    function injectPremiumBeinServers() {
-        const BEIN_PREMIUM = [
-            { name: "beIN SPORTS 1 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium1.m3u8" },
-            { name: "beIN SPORTS 2 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium2.m3u8" },
-            { name: "beIN SPORTS 3 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium3.m3u8" },
-            { name: "beIN SPORTS 4 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium4.m3u8" },
-            { name: "beIN SPORTS 7 Premium", logo: "https://i.postimg.cc/VNMwcc3n/images.png", url: "https://beinsports.akamaized.net/ps/beinsports/premium7.m3u8" }
-        ];
+        function goBack() {
+            document.getElementById('mainView').style.display = 'block';
+            document.getElementById('channelView').style.display = 'none';
+        }
 
-        // إضافة علامة "Premium" وتحديث القائمة
-        const checkReady = setInterval(() => {
-            if (allChannels && allChannels.length > 0) {
-                // فلترة لمنع التكرار ثم الإضافة
-                const cleanedList = allChannels.filter(c => !c.name.includes("Premium"));
-                allChannels = [...BEIN_PREMIUM, ...cleanedList];
-                
-                // تعديل عرض الكروت لإضافة علامة المشفره
-                const originalDisplay = displayChannels;
-                displayChannels = function(list) {
-                    const container = document.getElementById('channelList');
-                    container.innerHTML = '';
-                    list.slice(0, 180).forEach(ch => {
-                        const card = document.createElement('div');
-                        card.className = 'channel-card';
-                        const isPremium = ch.name.includes("Premium") ? '<span class="premium-badge">مشفره</span>' : '';
-                        card.innerHTML = `<img src="${ch.logo}" class="ch-logo"><div class="ch-info"><div class="ch-name">${isPremium}${ch.name}</div></div><i class="fas fa-play-circle play-btn"></i>`;
-                        card.onclick = () => openPlayer(ch.url, ch.name);
-                        container.appendChild(card);
-                    });
-                };
-                
-                displayChannels(allChannels);
-                clearInterval(checkReady);
+        function playChannel(url, name) {
+            document.getElementById('playerOverlay').style.display = 'flex';
+            document.getElementById('nowPlaying').innerText = name;
+            // تعديل الرابط ليتناسب مع روابط aflam4you ويفتح كـ embed
+            let finalUrl = url;
+            if(url.includes('embed.php') || url.includes('.html')) {
+                finalUrl = url;
             }
-        }, 1500);
-    }
-
-    // تشغيل الإضافات
-    injectPremiumBeinServers();
-</script>
-
-<!-- ========================================================= -->
-<!-- 🆕 الإضافة الجديدة: دعم JSON + دعم روابط Embed (Add Only) -->
-<!-- ========================================================= -->
-
-<style id="embedSupportCSS">
-    #embedContainer { display: none; width: 100%; height: 100%; border: none; }
-</style>
-
-<script id="embedAndJsonLogic">
-    // 1. إضافة عنصر iframe للمشغل ليدعم روابط Embed
-    const vContainer = document.querySelector('.video-container');
-    const iframe = document.createElement('iframe');
-    iframe.id = 'embedContainer';
-    iframe.allowFullscreen = true;
-    vContainer.appendChild(iframe);
-
-    // 2. تطوير دالة openPlayer (بدون لمس القديمة) لتدعم Embed
-    const oldOpenPlayer = openPlayer;
-    openPlayer = function(url, name) {
-        const vidElement = document.getElementById('mainVideo');
-        const embElement = document.getElementById('embedContainer');
-        
-        // التحقق إذا كان الرابط Embed (لا ينتهي بـ m3u8)
-        if (!url.includes('.m3u8') && (url.includes('http') || url.includes('embed'))) {
-            vidElement.style.display = 'none';
-            embElement.style.display = 'block';
-            embElement.src = url;
-            
-            document.getElementById('playerUI').style.display = 'flex';
-            document.getElementById('nowPlayingTitle').innerText = name;
-        } else {
-            // إذا كان رابط m3u8 عادي استخدم الدالة القديمة
-            vidElement.style.display = 'block';
-            embElement.style.display = 'none';
-            embElement.src = '';
-            oldOpenPlayer(url, name);
+            document.getElementById('videoFrame').src = finalUrl;
+            document.body.style.overflow = 'hidden';
         }
-    };
 
-    // 3. تطوير دالة closePlayer لتمسح رابط الـ iframe عند الغلق
-    const oldClosePlayer = closePlayer;
-    closePlayer = function() {
-        document.getElementById('embedContainer').src = '';
-        oldClosePlayer();
-    };
+        function closePlayer() {
+            document.getElementById('playerOverlay').style.display = 'none';
+            document.getElementById('videoFrame').src = '';
+            document.body.style.overflow = 'auto';
+        }
 
-    // 4. جلب القنوات من ملف JSON الخارجي
-    async function syncWithExternalJSON() {
-        try {
-            const res = await fetch('channels.json');
-            if (!res.ok) return;
-            const customChannels = await res.json();
-            
-            const waitAll = setInterval(() => {
-                if (allChannels.length > 0) {
-                    // دمج قنوات الـ JSON في المقدمة
-                    allChannels = [...customChannels, ...allChannels];
-                    displayChannels(allChannels);
-                    clearInterval(waitAll);
-                }
-            }, 2000);
-        } catch (e) { console.error("JSON Error"); }
-    }
+        function filterChannels() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            if(input.length > 0) {
+                document.getElementById('mainView').style.display = 'none';
+                document.getElementById('channelView').style.display = 'block';
+                document.getElementById('catTitle').innerText = "نتائج البحث";
+                const list = document.getElementById('channelList');
+                list.innerHTML = '';
+                const results = allChannels.filter(ch => ch.name.toLowerCase().includes(input));
+                results.forEach(ch => {
+                    list.innerHTML += `
+                        <div class="cat-card" onclick="playChannel('${ch.url}', '${ch.name}')">
+                            <i class="fas fa-play-circle"></i>
+                            <span>${ch.name}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                goBack();
+            }
+        }
 
-    syncWithExternalJSON();
-</script>
+        window.onload = init;
+    </script>
 
+    <style>
+        .cat-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s !important;
+            animation: slideUp 0.6s ease-out backwards !important;
+        }
+        .cat-card:hover {
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3) !important;
+            border-color: var(--gold) !important;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo { animation: goldGlow 3s infinite alternate; }
+        @keyframes goldGlow {
+            from { text-shadow: 0 0 5px rgba(212, 175, 55, 0.2); }
+            to { text-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
+        }
+    </style>
+
+    <script>
+        function applyProfessionalUpdates() {
+            const logoElement = document.querySelector('.logo');
+            if (logoElement) {
+                logoElement.innerHTML = 'ROMEO <span style="color:white">LIVE TV</span>';
+            }
+            const cards = document.querySelectorAll('.cat-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (index * 0.05) + 's';
+            });
+        }
+        window.addEventListener('DOMContentLoaded', applyProfessionalUpdates);
+    </script>
 </body>
 </html>
