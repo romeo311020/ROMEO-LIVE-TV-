@@ -6,9 +6,27 @@
     "img": "https://i.postimg.cc/8PS1RV6X/images-(2).jpg"
   },
   {
-    "name": "beIN SPORTS 1 HD",
-    "cat": "bein",
+    "name": "beIN SPORTS  1 HD",
+    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
     "url": "https://new.aflam4you.net/embed.php?vid=68",
-    "img": "https://i.postimg.cc/8PS1RV6X/images-(2).jpg"
+    "cat": "bein"
+  },
+  {
+    "name": "beIN SPORTS  2 HD",
+    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
+    "url": "https://new.aflam4you.net/embed.php?vid=2",
+    "cat": "bein"
+  },
+  {
+    "name": "beIN SPORTS  3 HD",
+    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
+    "url": "https://new.aflam4you.net/embed.php?vid=1",
+    "cat": "bein"
+  },
+  {
+    "name": "beIN SPORTS  4 HD",
+    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
+    "url": "https://new.aflam4you.net/embed.php?vid=3",
+    "cat": "bein"
   }
 ]
