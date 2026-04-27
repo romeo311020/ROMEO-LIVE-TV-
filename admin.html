@@ -196,6 +196,7 @@
         let ACTIVE_CAT = "";
         let EDIT_ID = -1;
 
+        // إضافة كافة الأقسام من ملف الموقع لضمان التوافق الكامل
         const CATS = [
             { name: "On Time Sport", id: "ontime", icon: "fa-trophy" },
             { name: "beIN Sports", id: "bein", icon: "fa-futbol" },
@@ -222,7 +223,9 @@
                 if(!res.ok) throw new Error();
                 const data = await res.json();
                 GH_SHA = data.sha;
-                CHANNELS = JSON.parse(atob(data.content));
+                // فك التشفير باستخدام UTF-8 لضمان قراءة الأسماء العربية بشكل صحيح
+                const decodedContent = decodeURIComponent(escape(atob(data.content)));
+                CHANNELS = JSON.parse(decodedContent);
                 
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
@@ -322,22 +325,29 @@
         async function syncWithGithub() {
             showLoading(true);
             try {
-                // استخدام unescape لضمان دعم اللغة العربية في Base64
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(CHANNELS, null, 2))));
+                // استخدام نظام تشفير UTF-8 المطور لضمان سلامة النصوص العربية
+                const jsonString = JSON.stringify(CHANNELS, null, 2);
+                const utf8Bytes = unescape(encodeURIComponent(jsonString));
+                const content = btoa(utf8Bytes);
+
                 const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/channels.json`, {
                     method: 'PUT',
                     headers: { 'Authorization': `token ${GH_TOKEN}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: "Pro Admin Update",
+                        message: "Pro Admin Update - Fix Encoding",
                         content: content,
                         sha: GH_SHA
                     })
                 });
                 const resData = await res.json();
-                GH_SHA = resData.content.sha;
-                alert("✨ تم تحديث السيرفر بنجاح!");
+                if(resData.content) {
+                    GH_SHA = resData.content.sha;
+                    alert("✨ تم تحديث السيرفر وإصلاح تشفير النصوص بنجاح!");
+                } else {
+                    throw new Error();
+                }
             } catch (e) {
-                alert("خطأ في المزامنة");
+                alert("خطأ في المزامنة: تأكد من الصلاحيات والإنترنت");
             } finally { showLoading(false); }
         }
 
