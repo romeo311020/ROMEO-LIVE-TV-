@@ -72,7 +72,7 @@
     "cat": "bein"
   },
   {
-    "name": "Ø¨Ù Ø§Ù Ø³Ø¨ÙØ±Øª Ø§ÙØ¥Ø®Ø¨Ø§Ø±ÙØ©",
+    "name": "ÃÂ¨ÃÂ ÃÂ§ÃÂ ÃÂ³ÃÂ¨ÃÂÃÂ±ÃÂª ÃÂ§ÃÂÃÂ¥ÃÂ®ÃÂ¨ÃÂ§ÃÂ±ÃÂÃÂ©",
     "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
     "url": "https://new.aflam4you.net/embed.php?vid=31",
     "cat": "bein"
@@ -96,21 +96,27 @@
     "cat": "ontime"
   },
   {
-    "name": "قناة الاهلي",
+    "name": "ÙÙØ§Ø© Ø§ÙØ§ÙÙÙ",
     "img": "https://i.postimg.cc/c46RVmNT/images-(6).jpg",
     "url": "https://new.aflam4you.net/embed.php?vid=27",
     "cat": "news"
   },
   {
-    "name": "قناة الزمالك",
+    "name": "ÙÙØ§Ø© Ø§ÙØ²ÙØ§ÙÙ",
     "img": "https://i.postimg.cc/2SQVJb33/images-(7).jpg",
     "url": "https://new.aflam4you.net/embed.php?vid=6100",
     "cat": "news"
   },
   {
-    "name": "بي ان اسبورت الاخبارية",
+    "name": "Ø¨Ù Ø§Ù Ø§Ø³Ø¨ÙØ±Øª Ø§ÙØ§Ø®Ø¨Ø§Ø±ÙØ©",
     "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
     "url": "https://new.aflam4you.net/embed.php?vid=31",
     "cat": "news"
+  },
+  {
+    "name": "مصر Mbc",
+    "img": "https://i.postimg.cc/C5vxYkkX/30.jpg",
+    "url": "https://new.aflam4you.net/embed.php?vid=178",
+    "cat": "mbc"
   }
 ]
