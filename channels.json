@@ -1,38 +1,14 @@
 [
   {
-    "name": "beIN SPORTS  1 HD",
-    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
-    "url": "<iframe width=\"320\" height=\"300\" src=\"https://new.aflam4you.net/embed.php?vid=68\" frameborder=\"0\" allowfullscreen seamless></iframe><p><a href=\"https://new.aflam4you.net/bein-sports-1-koora-live-bein1-hd-funding-tv_68.html\" target=\"_blank\">Beinsports 1 HD</a></p>",
-    "cat": "bein"
+    "name": "On Time Sport 1 HD",
+    "cat": "ontime",
+    "url": "https://new.aflam4you.net/embed.php?vid=445",
+    "img": "https://i.postimg.cc/8PS1RV6X/images-(2).jpg"
   },
   {
-    "name": "beIN SPORTS  2 HD",
-    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
-    "url": "<iframe width=\"320\" height=\"300\" src=\"https://new.aflam4you.net/embed.php?vid=2\" frameborder=\"0\" allowfullscreen seamless></iframe><p><a href=\"https://new.aflam4you.net/bein-sport-2-kora-2026-bns2-funding-tv_2.html\" target=\"_blank\">Beinsports 2 HD</a></p>",
-    "cat": "bein"
-  },
-  {
-    "name": "beIN SPORTS  3 HD",
-    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
-    "url": "<iframe width=\"320\" height=\"300\" src=\"https://new.aflam4you.net/embed.php?vid=1\" frameborder=\"0\" allowfullscreen seamless></iframe><p><a href=\"https://new.aflam4you.net/beinsport-3-directo-kora-2025-beins3-funding-tv_1.html\" target=\"_blank\">Beinsports 3 HD</a></p>",
-    "cat": "bein"
-  },
-  {
-    "name": "beIN SPORTS  4 HD",
-    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
-    "url": "<iframe width=\"320\" height=\"300\" src=\"https://new.aflam4you.net/embed.php?vid=3\" frameborder=\"0\" allowfullscreen seamless></iframe><p><a href=\"https://new.aflam4you.net/bein-sport-4-hd-kora-live-bns4-funding-tv_3.html\" target=\"_blank\">Beinsports 4 HD</a></p>",
-    "cat": "bein"
-  },
-  {
-    "name": "beIN SPORTS  5 HD",
-    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
-    "url": "<iframe width=\"320\" height=\"300\" src=\"https://new.aflam4you.net/embed.php?vid=73\" frameborder=\"0\" allowfullscreen seamless></iframe><p><a href=\"https://new.aflam4you.net/beinsport-5-hd-kora-live-funding-tv_73.html\" target=\"_blank\">Beinsports 5 HD</a></p>",
-    "cat": "bein"
-  },
-  {
-    "name": "beIN SPORTS  6 HD",
-    "img": "https://i.postimg.cc/28cyYSyj/images-(2).jpg",
-    "url": "https://new.aflam4you.net/embed.php?vid=1",
-    "cat": "bein"
+    "name": "beIN SPORTS 1 HD",
+    "cat": "bein",
+    "url": "https://new.aflam4you.net/embed.php?vid=68",
+    "img": "https://i.postimg.cc/8PS1RV6X/images-(2).jpg"
   }
 ]
