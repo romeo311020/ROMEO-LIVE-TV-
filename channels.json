@@ -172,5 +172,11 @@
     "img": "https://i.postimg.cc/W3zNJc36/rotana-cinema.jpg",
     "url": "https://www.elahmad.org/tv/radiant.php?id=rotana_cinema",
     "cat": "movies"
+  },
+  {
+    "name": "Rotana Classic",
+    "img": "https://i.postimg.cc/WzM1s6ts/rotana-classic.jpg",
+    "url": "https://www.elahmad.org/tv/radiant.php?id=rotana_classic",
+    "cat": "movies"
   }
 ]
